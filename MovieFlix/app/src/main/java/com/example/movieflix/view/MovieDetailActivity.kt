@@ -13,6 +13,7 @@ import com.example.movieflix.R
 import com.example.movieflix.api.MovieFlixApiTask
 import com.example.movieflix.model.Movie
 import com.example.movieflix.model.MovieDetail
+import kotlinx.android.synthetic.main.abs_detail_item.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.progress_bar
 import kotlinx.android.synthetic.main.activity_movie_detail.*
@@ -20,7 +21,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MovieDetailActivity : AppCompatActivity() {
+class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         const val EXTRA_MOVIE: String = "EXTRA_MOVIE"
     }
@@ -31,6 +32,10 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.abs_detail_item)
+
+        back_btn.setOnClickListener(this)
         getExtras()
         bindViews()
     }
@@ -87,5 +92,12 @@ class MovieDetailActivity : AppCompatActivity() {
         progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
+    override fun onClick(v: View) {
+        val id = v.id
+        if (id == R.id.back_btn){
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
 }

@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity(), ClickItemListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.abs_main_item)
+
         recyclerView = findViewById(R.id.moviesList)
 
         setList()
