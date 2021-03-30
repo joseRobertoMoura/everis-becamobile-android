@@ -10,13 +10,13 @@ import coil.load
 import com.example.movieflix.R
 import com.example.movieflix.model.Movie
 
-class MoviesAdapter(private var list: MutableList<Movie>) :
+class MoviesAdapter(private var list: MutableList<Movie>, private var listener: ClickItemListener) :
     RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.movie_item, parent, false)
-        return MoviesViewHolder(view)
+        return MoviesViewHolder(view, list, listener)
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
@@ -28,11 +28,18 @@ class MoviesAdapter(private var list: MutableList<Movie>) :
     }
 
     class MoviesViewHolder(
-        itemView: View
+        itemView: View,
+        private var list: MutableList<Movie>,
+        private var listener: ClickItemListener
     ) : RecyclerView.ViewHolder(itemView) {
         private val tvTitl: AppCompatTextView = itemView.findViewById(R.id.movieTitle)
         private val image: AppCompatImageView = itemView.findViewById(R.id.movieImage)
 
+        init {
+            itemView.setOnClickListener {
+                listener.ClickItemMovie(list[adapterPosition])
+            }
+        }
 
         fun bind(movie: Movie) {
             if (movie.original_title != null) {
@@ -47,6 +54,6 @@ class MoviesAdapter(private var list: MutableList<Movie>) :
 
         }
     }
+
+
 }
-
-

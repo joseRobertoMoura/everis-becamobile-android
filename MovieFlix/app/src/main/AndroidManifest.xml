@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieFlix" >
+        <activity android:name=".view.MovieDetailActivity"/>
         <activity android:name=".view.MainActivity"/>
         <activity android:name=".view.SplashScreenActivity" >
             <intent-filter>

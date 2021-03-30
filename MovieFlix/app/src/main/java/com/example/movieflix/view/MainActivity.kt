@@ -1,22 +1,25 @@
 package com.example.movieflix.view
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieflix.R
 import com.example.movieflix.api.MovieFlixApiTask
 import com.example.movieflix.model.Movie
 import com.example.movieflix.model.MovieTendency
+import com.example.movieflix.view.MovieDetailActivity.Companion.EXTRA_MOVIE
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ClickItemListener {
 
     lateinit var recyclerView: RecyclerView
 
@@ -44,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                         recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
                         val list: MutableList<Movie> = mutableListOf()
                         response.body()?.result?.forEach { list.add(it) }
-                        recyclerView.adapter = MoviesAdapter(list)
+                        recyclerView.adapter = MoviesAdapter(list, this@MainActivity)
                     }
                 }
 
@@ -63,5 +66,9 @@ class MainActivity : AppCompatActivity() {
         progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
+    override fun ClickItemMovie(movie: Movie) {
+        val intent = Intent(this, MovieDetailActivity::class.java)
+        intent.putExtra(EXTRA_MOVIE, movie)
+        startActivity(intent)
+    }
 }
-
