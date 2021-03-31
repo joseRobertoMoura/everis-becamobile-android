@@ -7,21 +7,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.ViewModelProvider
 import com.example.movieflix.R
-import com.example.movieflix.api.MovieFlixApiTask
+import com.example.movieflix.helper.ClickItemListener
 import com.example.movieflix.model.Movie
-import com.example.movieflix.model.MovieTendency
 import com.example.movieflix.view.MovieDetailActivity.Companion.EXTRA_MOVIE
+import com.example.movieflix.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), ClickItemListener {
 
-    lateinit var recyclerView: RecyclerView
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,39 +26,28 @@ class MainActivity : AppCompatActivity(), ClickItemListener {
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar?.setCustomView(R.layout.abs_main_item)
 
-        recyclerView = findViewById(R.id.moviesList)
+        mainViewModel =
+            ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
+        mainViewModel.init()
+        mainViewObserver()
 
-        setList()
     }
 
-    private fun setList() {
+    private fun mainViewObserver() {
         loadingVisibility(true)
-        Thread {
-            val call = MovieFlixApiTask.retrofitApi()
-                .getListTndency("579dbbdd2de6dd3cc42c4d65dc3afdae")
-            call.enqueue(object : Callback<MovieTendency> {
-                override fun onResponse(
-                    call: Call<MovieTendency>,
-                    response: Response<MovieTendency>
-                ) {
-                    if (response.isSuccessful) {
-                        loadingVisibility(false)
-                        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-                        val list: MutableList<Movie> = mutableListOf()
-                        response.body()?.result?.forEach { list.add(it) }
-                        recyclerView.adapter = MoviesAdapter(list, this@MainActivity)
-                    }
-                }
-
-                override fun onFailure(call: Call<MovieTendency>, t: Throwable) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Tivemos um problema, tente novamente em alguns instantes.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            })
-        }.start()
+        mainViewModel.moviesList.observe(this, {    list ->
+            if (list != null) {
+                loadingVisibility(false)
+                moviesList.adapter = MoviesAdapter(list, this)
+            } else {
+                loadingVisibility(false)
+                Toast.makeText(
+                    this,
+                    "Aconteceu um problema, tente novamente mais tarde!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
     }
 
     private fun loadingVisibility(isLoading: Boolean) {
@@ -74,4 +59,5 @@ class MainActivity : AppCompatActivity(), ClickItemListener {
         intent.putExtra(EXTRA_MOVIE, movie)
         startActivity(intent)
     }
+
 }

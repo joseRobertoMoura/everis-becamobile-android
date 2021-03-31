@@ -8,9 +8,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movieflix.R
+import com.example.movieflix.helper.ClickItemListener
 import com.example.movieflix.model.Movie
 
-class MoviesAdapter(private var list: MutableList<Movie>, private var listener: ClickItemListener) :
+class MoviesAdapter(private var list: List<Movie>, private var listener: ClickItemListener) :
     RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
@@ -29,7 +30,7 @@ class MoviesAdapter(private var list: MutableList<Movie>, private var listener: 
 
     class MoviesViewHolder(
         itemView: View,
-        private var list: MutableList<Movie>,
+        private var list: List<Movie>,
         private var listener: ClickItemListener
     ) : RecyclerView.ViewHolder(itemView) {
         private val tvTitl: AppCompatTextView = itemView.findViewById(R.id.movieTitle)

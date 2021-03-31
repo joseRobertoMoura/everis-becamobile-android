@@ -8,25 +8,24 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.example.movieflix.R
-import com.example.movieflix.api.MovieFlixApiTask
+import com.example.movieflix.helper.SharedPreferences
 import com.example.movieflix.model.Movie
-import com.example.movieflix.model.MovieDetail
+import com.example.movieflix.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.abs_detail_item.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.progress_bar
-import kotlinx.android.synthetic.main.activity_movie_detail.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         const val EXTRA_MOVIE: String = "EXTRA_MOVIE"
     }
 
+    private lateinit var sharedPreferences: SharedPreferences
     private var movie: Movie? = null
+
+    private lateinit var detailViewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +34,17 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar?.setCustomView(R.layout.abs_detail_item)
 
-        back_btn.setOnClickListener(this)
         getExtras()
+
+        sharedPreferences = SharedPreferences(this)
+
+        detailViewModel =
+            ViewModelProvider.NewInstanceFactory().create(DetailViewModel::class.java)
+        detailViewModel.init(movie, this)
+
         bindViews()
+
+        back_btn.setOnClickListener(this)
     }
 
     private fun getExtras() {
@@ -46,41 +53,38 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun bindViews() {
         visibilityProgressBar(true)
-        Thread {
-            val call = MovieFlixApiTask.retrofitApi()
-                .getMovieDetail(movie?.id, "579dbbdd2de6dd3cc42c4d65dc3afdae")
-            call.enqueue(object : Callback<MovieDetail> {
-                override fun onResponse(call: Call<MovieDetail>, response: Response<MovieDetail>) {
-                    if (response.isSuccessful) {
-                        visibilityProgressBar(false)
-                        findViewById<AppCompatImageView>(R.id.movieImage_detail).load(
-                            "https://image.tmdb.org/t/p/w500"
-                                    + response.body()?.poster_path
-                        ) {
-                            placeholder(R.drawable.ic_baseline_image_24)
-                            fallback(R.drawable.ic_baseline_image_24)
-                        }
-                        if (response.body()?.original_title != null) {
-                            findViewById<TextView>(R.id.tv_title).text =
-                                response.body()?.original_title
-                        } else if (response.body()?.original_name != null) {
-                            findViewById<TextView>(R.id.tv_title).text =
-                                response.body()?.original_name
-                        }
-                        findViewById<TextView>(R.id.tv_overview).text = response.body()?.overview
-                    }
+        detailViewModel.moviesList.observe(this,{ it ->
+            if (it){
+                val poster_path = sharedPreferences.getString("poster_path")
+                val original_title = sharedPreferences.getString("original_title")
+                val original_name = sharedPreferences.getString("original_name")
+                val overview = sharedPreferences.getString("overview")
+                visibilityProgressBar(false)
+                findViewById<AppCompatImageView>(R.id.movieImage_detail).load(
+                    "https://image.tmdb.org/t/p/w500"
+                            + poster_path
+                ) {
+                    placeholder(R.drawable.ic_baseline_image_24)
+                    fallback(R.drawable.ic_baseline_image_24)
                 }
-
-                override fun onFailure(call: Call<MovieDetail>, t: Throwable) {
-                    Toast.makeText(
-                        this@MovieDetailActivity,
-                        "Tivemos um problema, tente novamente em alguns instantes.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                if (original_title != null) {
+                    findViewById<TextView>(R.id.tv_title).text =
+                        original_title
+                } else if (original_name != null) {
+                    findViewById<TextView>(R.id.tv_title).text =
+                        original_name
                 }
+                findViewById<TextView>(R.id.tv_overview).text = overview
+            }else {
+                Toast.makeText(
+                    this@MovieDetailActivity,
+                    "Tivemos um problema, tente novamente em alguns instantes.",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
+            }
+        })
 
-            })
-        }.start()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -88,13 +92,13 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
         return true
     }
 
-    private fun visibilityProgressBar(isLoading: Boolean){
+    private fun visibilityProgressBar(isLoading: Boolean) {
         progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onClick(v: View) {
         val id = v.id
-        if (id == R.id.back_btn){
+        if (id == R.id.back_btn) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
