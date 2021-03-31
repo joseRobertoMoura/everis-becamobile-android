@@ -1,4 +1,4 @@
-# AvaliaÃ§Ã£o Beca Mobile Android
+# Avaliação Beca Mobile Android
 
 Para a implementação do aplicativo foi utilizado o MVVM como padrão, para as requisições http utilizei o retrofi por ter afinidade com a ferramenta devido os usos nos cursos ofertados no bootcamp e para o carregamento de imagens escolhi o coil que foi uma ferramenta vista tabém no bootcamp. 
 
