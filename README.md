@@ -1,20 +1,7 @@
 # AvaliaÃ§Ã£o Beca Mobile Android
 
-Criar um aplicativo que realize a listagem de filmes que sÃ£o tendÃªncias da semana. Quando o usuÃ¡rio selecionar um filme o aplicativo deve direciona-lo para uma segunda tela e exibir o tÃ­tulo, capa, rating e sinopse. 
+Para a implementação do aplicativo foi utilizado o MVVM como padrão, para as requisições http utilizei o retrofi por ter afinidade com a ferramenta devido os usos nos cursos ofertados no bootcamp e para o carregamento de imagens escolhi o coil que foi uma ferramenta vista tabém no bootcamp. 
 
-A listagem de filmes deve ser consultada na API https://developers.themoviedb.org/3/getting-started/introduction ao se cadastrar vocÃª receberÃ¡ uma chave de acesso que deve ser usada nas requisiÃ§Ãµes. 
-
-- RequisiÃ§Ã£o para listar as tendÃªncias https://developers.themoviedb.org/3/trending/get-trending
-- RequisiÃ§Ã£o para listar os detalhes https://developers.themoviedb.org/3/movies/get-movie-details
-
-FaÃ§a um fork deste projeto e quando finalizar a implementaÃ§Ã£o faÃ§a um pull request na descriÃ§Ã£o informe qual a abordagem que vocÃª utilizou para chegar na soluÃ§Ã£o descreva tambÃ©m quais foram os maiores desafios para concluir a avaliaÃ§Ã£o.
-
-As bibliotecas abaixo podem ajuda-lo a lidar com alguns desafios deste projeto.
-
-- Biblioteca para carregamento de imagens https://github.com/square/picasso
-- Biblioteca para requisiÃ§Ãµes http https://github.com/square/retrofit
-
-
-
+Encontrei alguns desafios no decorrer da implementalção. Na utilização do retrofit, para fazer a requisição na api que detalhava cada filme era necessário a utilização de um id para a identificação e como não tenho conhecimento amplo na ferramenta foi necessário a leitura da documentação da ferramenta para conseguir realizar a request. Na "DetailViewModel" precisei utilizar o sharedpreferences para armezenar os dados da request e posteriormente utiliza-los na "MovieDetailActivity" pois não estava conseguindo trafegar os dados da "DetailViewModel" para a "MovieDetailActivity".
 
 
