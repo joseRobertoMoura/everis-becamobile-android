@@ -3,4 +3,5 @@
     <string name="tittle_app">Movie Flix</string>
     <string name="title_abs">Filmes em destaque</string>
     <string name="title_abs_detail">Descrição</string>
+    <string name="btn_voltar_text">Voltar</string>
 </resources>
