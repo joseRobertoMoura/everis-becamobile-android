@@ -15,25 +15,31 @@ import com.example.movieflix.view.MovieDetailActivity.Companion.EXTRA_MOVIE
 import com.example.movieflix.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), ClickItemListener {
+class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListener {
 
     private lateinit var mainViewModel: MainViewModel
+    private var numPage = 1
+    private lateinit var totalPages:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        back_btn.setOnClickListener(this)
+        next_btn.setOnClickListener(this)
+
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar?.setCustomView(R.layout.abs_main_item)
 
-        mainViewModel =
-            ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
-        mainViewModel.init()
-        mainViewObserver()
+        mainViewObserver(numPage.toString())
 
     }
 
-    private fun mainViewObserver() {
+
+    private fun mainViewObserver(numPage: String) {
+        mainViewModel =
+            ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
+        mainViewModel.init(numPage)
         loadingVisibility(true)
         mainViewModel.moviesList.observe(this, {    list ->
             if (list != null) {
@@ -48,6 +54,9 @@ class MainActivity : AppCompatActivity(), ClickItemListener {
                 ).show()
             }
         })
+        mainViewModel.total.observe(this, {
+            totalPages = it
+        })
     }
 
     private fun loadingVisibility(isLoading: Boolean) {
@@ -58,6 +67,22 @@ class MainActivity : AppCompatActivity(), ClickItemListener {
         val intent = Intent(this, MovieDetailActivity::class.java)
         intent.putExtra(EXTRA_MOVIE, movie)
         startActivity(intent)
+    }
+
+    override fun onClick(v: View) {
+        val id = v.id
+
+        if (id == R.id.back_btn){
+            if (numPage > 1){
+                numPage -= 1
+                mainViewObserver(numPage.toString())
+            }
+        } else if(id == R.id.next_btn){
+            if (numPage <= totalPages.toInt()){
+                numPage += 1
+                mainViewObserver(numPage.toString())
+            }
+        }
     }
 
 }
