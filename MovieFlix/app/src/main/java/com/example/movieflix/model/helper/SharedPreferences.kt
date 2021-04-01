@@ -1,4 +1,4 @@
-package com.example.movieflix.helper
+package com.example.movieflix.model.helper
 
 import android.content.Context
 

@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movieflix.R
-import com.example.movieflix.helper.ClickItemListener
+import com.example.movieflix.model.helper.ClickItemListener
 import com.example.movieflix.model.Movie
 
 class MoviesAdapter(private var list: List<Movie>, private var listener: ClickItemListener) :

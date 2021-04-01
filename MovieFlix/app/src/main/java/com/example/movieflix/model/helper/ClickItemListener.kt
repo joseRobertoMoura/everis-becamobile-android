@@ -1,4 +1,4 @@
-package com.example.movieflix.helper
+package com.example.movieflix.model.helper
 
 import com.example.movieflix.model.Movie
 

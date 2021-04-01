@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.example.movieflix.R
-import com.example.movieflix.helper.SharedPreferences
+import com.example.movieflix.model.helper.SharedPreferences
 import com.example.movieflix.model.Movie
 import com.example.movieflix.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.abs_detail_item.*
@@ -44,7 +44,7 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         bindViews()
 
-        back_btn.setOnClickListener(this)
+        abs_detail_back_btn.setOnClickListener(this)
     }
 
     private fun getExtras() {
@@ -98,9 +98,10 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         val id = v.id
-        if (id == R.id.back_btn) {
+        if (id == R.id.abs_detail_back_btn) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 

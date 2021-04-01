@@ -2,7 +2,6 @@ package com.example.movieflix.view
 
 
 import android.content.Intent
-import android.icu.text.CaseMap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieflix.R
-import com.example.movieflix.helper.ClickItemListener
+import com.example.movieflix.model.helper.ClickItemListener
 import com.example.movieflix.model.Movie
 import com.example.movieflix.view.MovieDetailActivity.Companion.EXTRA_MOVIE
 import com.example.movieflix.viewmodel.MainViewModel
@@ -105,10 +104,12 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
                 search_btn.visibility = View.GONE
                 text_search.visibility = View.VISIBLE
                 send_search.visibility = View.VISIBLE
-                voltar_btn.visibility = View.VISIBLE
+                back_btn.visibility = View.GONE
+                next_btn.visibility = View.GONE
             }
 
             (id == R.id.send_search) -> {
+                voltar_btn.visibility = View.VISIBLE
                 val titulo = text_search.text.toString()
                 listResultSearch = serchList(listToSearch, titulo)
                 mainViewObserver(numPage.toString())
@@ -122,6 +123,9 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
                 search_btn.visibility = View.VISIBLE
                 text_search.visibility = View.GONE
                 send_search.visibility = View.GONE
+                voltar_btn.visibility = View.GONE
+                back_btn.visibility = View.VISIBLE
+                next_btn.visibility = View.VISIBLE
             }
         }
 

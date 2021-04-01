@@ -1,16 +1,13 @@
 package com.example.movieflix.viewmodel
 
 import android.content.Context
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.movieflix.api.MovieFlixApiTask
-import com.example.movieflix.helper.SharedPreferences
+import com.example.movieflix.model.api.MovieFlixApiTask
+import com.example.movieflix.model.helper.SharedPreferences
 import com.example.movieflix.model.Movie
 import com.example.movieflix.model.MovieDetail
-import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

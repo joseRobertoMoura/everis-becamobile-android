@@ -3,7 +3,7 @@ package com.example.movieflix.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.movieflix.api.MovieFlixApiTask
+import com.example.movieflix.model.api.MovieFlixApiTask
 import com.example.movieflix.model.Movie
 import com.example.movieflix.model.MovieTendency
 import retrofit2.Call

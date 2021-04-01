@@ -1,4 +1,4 @@
-package com.example.movieflix.api
+package com.example.movieflix.model.api
 
 
 import com.example.movieflix.model.MovieDetail
