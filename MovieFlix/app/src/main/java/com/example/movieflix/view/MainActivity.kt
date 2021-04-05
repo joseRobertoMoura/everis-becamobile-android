@@ -117,6 +117,7 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
 
             (id == R.id.voltar_btn) -> {
                 mainViewObserver(numPage.toString())
+                text_search.text.clear()
                 listResultSearch.clear()
 
                 tv_title_abs_main.visibility = View.VISIBLE
@@ -134,8 +135,9 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
     private fun serchList(list: MutableList<Movie>, title: String): MutableList<Movie>{
         val listResult: MutableList<Movie> = arrayListOf()
         for(element in list){
-            if(element.original_title == title){
+            if(element.original_title?.contains(title) == true){
                 listResult.addAll(listOf(element))
+                break
             }
         }
 
