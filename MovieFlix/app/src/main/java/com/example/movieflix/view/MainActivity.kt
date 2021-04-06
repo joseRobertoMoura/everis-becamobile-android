@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieflix.R
+import com.example.movieflix.login.view.LoginActivity
 import com.example.movieflix.model.helper.ClickItemListener
 import com.example.movieflix.model.Movie
 import com.example.movieflix.view.MovieDetailActivity.Companion.EXTRA_MOVIE
@@ -37,6 +38,7 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
 
         search_btn.setOnClickListener(this)
         send_search.setOnClickListener(this)
+        btn_exit.setOnClickListener(this)
 
         mainViewObserver(numPage.toString())
 
@@ -106,6 +108,7 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
                 send_search.visibility = View.VISIBLE
                 back_btn.visibility = View.GONE
                 next_btn.visibility = View.GONE
+                btn_exit.visibility = View.GONE
             }
 
             (id == R.id.send_search) -> {
@@ -127,6 +130,13 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
                 voltar_btn.visibility = View.GONE
                 back_btn.visibility = View.VISIBLE
                 next_btn.visibility = View.VISIBLE
+                btn_exit.visibility = View.VISIBLE
+            }
+
+            (id == R.id.btn_exit) -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         }
 

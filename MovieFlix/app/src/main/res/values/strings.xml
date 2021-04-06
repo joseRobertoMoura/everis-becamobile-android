@@ -4,4 +4,6 @@
     <string name="title_abs">Filmes em destaque</string>
     <string name="title_abs_detail">Descrição</string>
     <string name="btn_voltar_text">Voltar</string>
+    <string name="mLogin_usuario_title">Usuario</string>
+    <string name="mLogin_senha">Senha</string>
 </resources>
