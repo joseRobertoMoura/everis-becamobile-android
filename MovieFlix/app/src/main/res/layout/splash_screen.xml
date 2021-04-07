@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="2dp"
-        android:indeterminateDrawable="@drawable/progress_bg"
+        android:indeterminateDrawable="@drawable/splash_progress_bg"
         android:progressBackgroundTint="@color/backColor_main"
         android:layout_marginTop="50dp"
         app:layout_constraintLeft_toLeftOf="parent"

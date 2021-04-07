@@ -64,9 +64,11 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
             ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
         mainViewModel.init(numPage)
         loadingVisibility(true)
+        visibilityRecyclerView(false)
         mainViewModel.moviesList.observe(this, {    list ->
             if (list != null) {
                 loadingVisibility(false)
+                visibilityRecyclerView(true)
                 listToSearch.addAll(list)
                 if(listResultSearch.isNotEmpty()){
                     moviesList.adapter = MoviesAdapter(listResultSearch, this)
@@ -91,6 +93,15 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
+    private fun visibilityRecyclerView(visible: Boolean){
+        if (visible){
+            moviesList.visibility = View.VISIBLE
+        }else{
+            moviesList.visibility = View.GONE
+        }
+
+    }
+
     override fun ClickItemMovie(movie: Movie) {
         val intent = Intent(this, MovieDetailActivity::class.java)
         intent.putExtra(EXTRA_MOVIE, movie)
@@ -102,7 +113,7 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
 
         when {
             (id == R.id.back_btn) -> {
-                if (numPage > 1){
+                if (numPage > 1) {
                     numPage -= 1
                     mainViewObserver(numPage.toString())
                 }

@@ -15,6 +15,7 @@ import com.example.movieflix.model.Movie
 import com.example.movieflix.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.abs_detail_item.*
 import kotlinx.android.synthetic.main.activity_main.progress_bar
+import kotlinx.android.synthetic.main.activity_movie_detail.*
 
 class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
@@ -52,6 +53,7 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun bindViews() {
         visibilityProgressBar(true)
+        visibilityLayoutDescricao(false)
         detailViewModel.moviesList.observe(this,{
             if (it){
                 val posterPath = sharedPreferences.getString("poster_path")
@@ -59,6 +61,7 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
                 val originalName = sharedPreferences.getString("original_name")
                 val overview = sharedPreferences.getString("overview")
                 visibilityProgressBar(false)
+                visibilityLayoutDescricao(true)
                 findViewById<AppCompatImageView>(R.id.movieImage_detail).load(
                     "https://image.tmdb.org/t/p/w500"
                             + posterPath
@@ -93,6 +96,14 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun visibilityProgressBar(isLoading: Boolean) {
         progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun visibilityLayoutDescricao(visible: Boolean){
+        if (visible){
+            descricao.visibility = View.VISIBLE
+        }else{
+            descricao.visibility = View.GONE
+        }
     }
 
     override fun onClick(v: View) {
