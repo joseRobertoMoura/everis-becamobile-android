@@ -1,2 +1,4 @@
+include ':login'
+include ':login_module'
 include ':app'
 rootProject.name = "MovieFlix"

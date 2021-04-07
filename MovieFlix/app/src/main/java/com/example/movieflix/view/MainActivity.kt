@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieflix.R
-import com.example.movieflix.login.view.LoginActivity
+import com.example.login.login.view.LoginActivity
 import com.example.movieflix.model.helper.ClickItemListener
 import com.example.movieflix.model.Movie
 import com.example.movieflix.view.MovieDetailActivity.Companion.EXTRA_MOVIE
@@ -36,12 +36,26 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar?.setCustomView(R.layout.abs_main_item)
 
+        login()
+
         search_btn.setOnClickListener(this)
         send_search.setOnClickListener(this)
         btn_exit.setOnClickListener(this)
+    }
 
-        mainViewObserver(numPage.toString())
+    private fun login() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivityForResult(intent, LOGIN_CODE_SUCCESS)
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == LOGIN_CODE_SUCCESS){
+            mainViewObserver(numPage.toString())
+        }else if(requestCode == LOGIN_CODE_ERROR){
+            finish()
+        }
     }
 
 
@@ -113,8 +127,8 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
 
             (id == R.id.send_search) -> {
                 voltar_btn.visibility = View.VISIBLE
-                val titulo = text_search.text.toString()
-                listResultSearch = serchList(listToSearch, titulo)
+                val title = text_search.text.toString()
+                listResultSearch = searchList(listToSearch, title)
                 mainViewObserver(numPage.toString())
             }
 
@@ -134,15 +148,13 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
             }
 
             (id == R.id.btn_exit) -> {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
+                login()
             }
         }
 
     }
 
-    private fun serchList(list: MutableList<Movie>, title: String): MutableList<Movie>{
+    private fun searchList(list: MutableList<Movie>, title: String): MutableList<Movie>{
         val listResult: MutableList<Movie> = arrayListOf()
         for(element in list){
             if(element.original_title?.contains(title) == true){
@@ -152,6 +164,11 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         }
 
         return listResult
+    }
+
+    private companion object {
+        const val LOGIN_CODE_SUCCESS = 1
+        const val LOGIN_CODE_ERROR = 2
     }
 
 }

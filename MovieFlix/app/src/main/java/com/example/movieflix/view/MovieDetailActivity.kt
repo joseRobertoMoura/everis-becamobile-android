@@ -1,6 +1,5 @@
 package com.example.movieflix.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -53,26 +52,26 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun bindViews() {
         visibilityProgressBar(true)
-        detailViewModel.moviesList.observe(this,{ it ->
+        detailViewModel.moviesList.observe(this,{
             if (it){
-                val poster_path = sharedPreferences.getString("poster_path")
-                val original_title = sharedPreferences.getString("original_title")
-                val original_name = sharedPreferences.getString("original_name")
+                val posterPath = sharedPreferences.getString("poster_path")
+                val originalTitle = sharedPreferences.getString("original_title")
+                val originalName = sharedPreferences.getString("original_name")
                 val overview = sharedPreferences.getString("overview")
                 visibilityProgressBar(false)
                 findViewById<AppCompatImageView>(R.id.movieImage_detail).load(
                     "https://image.tmdb.org/t/p/w500"
-                            + poster_path
+                            + posterPath
                 ) {
                     placeholder(R.drawable.ic_baseline_image_24)
                     fallback(R.drawable.ic_baseline_image_24)
                 }
-                if (original_title != null) {
+                if (originalTitle !=  null) {
                     findViewById<TextView>(R.id.tv_title).text =
-                        original_title
-                } else if (original_name != null) {
+                        originalTitle
+                } else if (originalName != null) {
                     findViewById<TextView>(R.id.tv_title).text =
-                        original_name
+                        originalName
                 }
                 findViewById<TextView>(R.id.tv_overview).text = overview
             }else {
@@ -99,8 +98,6 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         val id = v.id
         if (id == R.id.abs_detail_back_btn) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
             finish()
         }
     }

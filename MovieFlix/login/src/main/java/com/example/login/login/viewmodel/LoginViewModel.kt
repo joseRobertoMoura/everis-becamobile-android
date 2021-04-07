@@ -1,4 +1,4 @@
-package com.example.movieflix.login.viewmodel
+package com.example.login.login.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

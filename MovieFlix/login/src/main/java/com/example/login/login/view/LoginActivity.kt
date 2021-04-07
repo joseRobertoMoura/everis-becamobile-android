@@ -1,4 +1,4 @@
-package com.example.movieflix.login.view
+package com.example.login.login.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,10 +6,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.movieflix.R
-import com.example.movieflix.login.viewmodel.LoginViewModel
-import com.example.movieflix.view.MainActivity
-import com.example.movieflix.viewmodel.MainViewModel
+import com.example.login.R
+import com.example.login.login.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.login_activity.*
 
 class LoginActivity() : AppCompatActivity(), View.OnClickListener {
@@ -30,16 +28,17 @@ class LoginActivity() : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loginViewObeserver() {
+        val intent = Intent()
         loginViewModel =
             ViewModelProvider.NewInstanceFactory().create(LoginViewModel::class.java)
         loginViewModel.init(userName, userPassword)
         loginViewModel.requestLogin.observe(this, { result ->
             if (result) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                setResult(M_LOGIN_CODE_SUCESS,intent)
                 finish()
             } else if (!result) {
-                Toast.makeText(this, "Usario/Senha incorretos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Usario/Senha incorretos", Toast.LENGTH_SHORT).show()
+                setResult(M_LOGIN_CODE_ERROR,intent)
             }
         })
     }
@@ -57,5 +56,10 @@ class LoginActivity() : AppCompatActivity(), View.OnClickListener {
             }
         }
 
+    }
+
+    companion object {
+        const val M_LOGIN_CODE_SUCESS = 1
+        const val M_LOGIN_CODE_ERROR = 2
     }
 }

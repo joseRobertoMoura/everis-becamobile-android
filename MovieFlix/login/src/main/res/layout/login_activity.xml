@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splash_color">
+    android:background="@color/mLogin_splash_color">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mLogin_usuario_title"
-            android:textColor="@color/backColor_main"
+            android:textColor="@color/mLogin_backColor_main"
             android:textSize="20sp" />
 
         <EditText
@@ -29,8 +29,10 @@
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:inputType="text"
-            android:background="@color/backColor_main"
-            android:textColor="@color/splash_color" />
+            android:background="@color/mLogin_backColor_main"
+            android:textColor="@color/mLogin_splash_color"
+            android:autofillHints="text"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/userPassword_title"
@@ -38,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/mLogin_senha"
-            android:textColor="@color/backColor_main"
+            android:textColor="@color/mLogin_backColor_main"
             android:textSize="20sp" />
 
         <EditText
@@ -46,20 +48,33 @@
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
-            android:background="@color/backColor_main"
-            android:textColor="@color/splash_color"
-            android:inputType="textPassword" />
+            android:background="@color/mLogin_backColor_main"
+            android:textColor="@color/mLogin_splash_color"
+            android:inputType="textPassword"
+            android:autofillHints="password"
+            tools:ignore="LabelFor" />
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Entrar"
-            android:backgroundTint="@color/backColor_main"
-            android:textColor="@color/splash_color"
+            android:text="@string/mLogin_btn_entrar"
+            android:backgroundTint="@color/mLogin_backColor_main"
+            android:textColor="@color/mLogin_splash_color"
             android:layout_marginTop="10dp"/>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/mLogin_title"
+        android:textColor="@color/mLogin_backColor_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 
 
