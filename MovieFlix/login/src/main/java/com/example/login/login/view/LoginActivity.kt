@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.login_activity.*
 class LoginActivity() : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var loginViewModel: LoginViewModel
-    private var userName = ""
-    private var userPassword = ""
+    private  lateinit var userName: String
+    private lateinit var userPassword: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

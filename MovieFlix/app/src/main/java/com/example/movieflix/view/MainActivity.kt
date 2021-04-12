@@ -1,6 +1,5 @@
 package com.example.movieflix.view
 
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,24 +22,24 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
     private var listResultSearch: MutableList<Movie> = arrayListOf()
     private lateinit var mainViewModel: MainViewModel
     private var numPage = 1
-    private lateinit var totalPages:String
+    private lateinit var totalPages: String
+    private var Loged = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.abs_main_item)
         back_btn.setOnClickListener(this)
         next_btn.setOnClickListener(this)
         voltar_btn.setOnClickListener(this)
-
-        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        supportActionBar?.setCustomView(R.layout.abs_main_item)
-
-        login()
-
         search_btn.setOnClickListener(this)
         send_search.setOnClickListener(this)
         btn_exit.setOnClickListener(this)
+
+        if (Loged == -1) {
+            login()
+        }
     }
 
     private fun login() {
@@ -48,16 +47,24 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         startActivityForResult(intent, LOGIN_CODE_SUCCESS)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == LOGIN_CODE_SUCCESS){
-            mainViewObserver(numPage.toString())
-        }else if(requestCode == LOGIN_CODE_ERROR){
+    override fun onRestart() {
+        super.onRestart()
+        if (Loged == -1) {
+            login()
             finish()
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == LOGIN_CODE_SUCCESS) {
+            Loged = 0
+            mainViewObserver(numPage.toString())
+        } else if (requestCode == LOGIN_CODE_ERROR) {
+            login()
+        }
+    }
 
     private fun mainViewObserver(numPage: String) {
         mainViewModel =
@@ -65,21 +72,21 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         mainViewModel.init(numPage)
         loadingVisibility(true)
         visibilityRecyclerView(false)
-        mainViewModel.moviesList.observe(this, {    list ->
+        mainViewModel.moviesList.observe(this, { list ->
             if (list != null) {
                 loadingVisibility(false)
                 visibilityRecyclerView(true)
                 listToSearch.addAll(list)
-                if(listResultSearch.isNotEmpty()){
+                if (listResultSearch.isNotEmpty()) {
                     moviesList.adapter = MoviesAdapter(listResultSearch, this)
-                }else {
+                } else {
                     moviesList.adapter = MoviesAdapter(list, this)
                 }
             } else {
                 loadingVisibility(false)
                 Toast.makeText(
                     this,
-                    "Aconteceu um problema, tente novamente mais tarde!",
+                    "Ops tivemos um problema, tente novamente mais tarde!",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -93,10 +100,10 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun visibilityRecyclerView(visible: Boolean){
-        if (visible){
+    private fun visibilityRecyclerView(visible: Boolean) {
+        if (visible) {
             moviesList.visibility = View.VISIBLE
-        }else{
+        } else {
             moviesList.visibility = View.GONE
         }
 
@@ -120,7 +127,7 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
             }
 
             (id == R.id.next_btn) -> {
-                if (numPage <= totalPages.toInt()){
+                if (numPage <= totalPages.toInt()) {
                     numPage += 1
                     mainViewObserver(numPage.toString())
                 }
@@ -159,16 +166,18 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
             }
 
             (id == R.id.btn_exit) -> {
+                Loged = -1
                 login()
+                finish()
             }
         }
 
     }
 
-    private fun searchList(list: MutableList<Movie>, title: String): MutableList<Movie>{
+    private fun searchList(list: MutableList<Movie>, title: String): MutableList<Movie> {
         val listResult: MutableList<Movie> = arrayListOf()
-        for(element in list){
-            if(element.original_title?.contains(title) == true){
+        for (element in list) {
+            if (element.original_title?.contains(title) == true) {
                 listResult.addAll(listOf(element))
                 break
             }

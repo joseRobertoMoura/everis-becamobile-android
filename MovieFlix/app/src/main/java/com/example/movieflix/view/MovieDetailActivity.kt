@@ -80,10 +80,9 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
             }else {
                 Toast.makeText(
                     this@MovieDetailActivity,
-                    "Tivemos um problema, tente novamente em alguns instantes.",
+                    "Ops tivemos um problema, tente novamente em alguns instantes.",
                     Toast.LENGTH_LONG
                 ).show()
-                finish()
             }
         })
 

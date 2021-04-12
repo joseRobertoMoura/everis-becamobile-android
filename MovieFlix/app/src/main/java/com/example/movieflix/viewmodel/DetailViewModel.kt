@@ -11,6 +11,7 @@ import com.example.movieflix.model.MovieDetail
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class DetailViewModel : ViewModel() {
     lateinit var sharedPreferences: SharedPreferences
@@ -27,39 +28,47 @@ class DetailViewModel : ViewModel() {
 
 
     private fun setObject(id: String?, context: Context) {
-        Thread {
-            sharedPreferences = SharedPreferences(context)
-            val call = MovieFlixApiTask.retrofitApi()
-                .getMovieDetail(id, "579dbbdd2de6dd3cc42c4d65dc3afdae")
-            call.enqueue(object : Callback<MovieDetail> {
-                override fun onResponse(call: Call<MovieDetail>, response: Response<MovieDetail>) {
-                    if (response.isSuccessful) {
+        try {
+            Thread {
+                sharedPreferences = SharedPreferences(context)
+                val call = MovieFlixApiTask.retrofitApi()
+                    .getMovieDetail(id, "579dbbdd2de6dd3cc42c4d65dc3afdae")
+                call.enqueue(object : Callback<MovieDetail> {
+                    override fun onResponse(
+                        call: Call<MovieDetail>,
+                        response: Response<MovieDetail>
+                    ) {
+                        if (response.isSuccessful) {
 
-                        sharedPreferences.storeString(
-                            "original_name",
-                            response.body()?.original_name.toString()
-                        )
-                        sharedPreferences.storeString(
-                            "original_title",
-                            response.body()?.original_title.toString()
-                        )
-                        sharedPreferences.storeString(
-                            "poster_path",
-                            response.body()?.poster_path.toString()
-                        )
-                        sharedPreferences.storeString(
-                            "overview",
-                            response.body()?.overview.toString()
-                        )
+                            sharedPreferences.storeString(
+                                "original_name",
+                                response.body()?.original_name.toString()
+                            )
+                            sharedPreferences.storeString(
+                                "original_title",
+                                response.body()?.original_title.toString()
+                            )
+                            sharedPreferences.storeString(
+                                "poster_path",
+                                response.body()?.poster_path.toString()
+                            )
+                            sharedPreferences.storeString(
+                                "overview",
+                                response.body()?.overview.toString()
+                            )
 
-                        check.postValue(true)
+                            check.postValue(true)
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<MovieDetail>, t: Throwable) {
-                    check.postValue(false)
-                }
-            })
-        }.start()
+                    override fun onFailure(call: Call<MovieDetail>, t: Throwable) {
+                        check.postValue(false)
+                    }
+                })
+            }.start()
+        } catch (e: Exception) {
+            check.postValue(false)
+            println(e.message)
+        }
     }
 }
