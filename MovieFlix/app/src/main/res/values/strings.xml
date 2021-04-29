@@ -4,4 +4,21 @@
     <string name="title_abs">Filmes em destaque</string>
     <string name="title_abs_detail">Descrição</string>
     <string name="btn_voltar_text">Voltar</string>
+    <string name="pause">pause</string>
+
+    --Descriptions Field
+    <string name="descp_btn_sair">Aair</string>
+    <string name="dsc_titulo_pagina">Titulo pagina</string>
+    <string name="dsc_btn_search">Pesquisar filmes</string>
+    <string name="dsc_search_bar">Barra para digitar o nome do filme que deseja pesquisar</string>
+    <string name="dsc_btn_send_search">Enviar o conteúdo a ser pesquisado</string>
+    <string name="dsc_btn_back">Voltar uma página</string>
+    <string name="dsc_btn_foward">Avançar uma página</string>
+    <string name="dsc_btn_voltar">Voltar a tela principal após finalizar pesquisa</string>
+    <string name="dsc_btn_back_detail">Voltar a tela principal</string>
+    <string name="dsc_title_detail">Detalhes de filmes</string>
+    <string name="accessibility_service_label">Serviço de acessibilidade</string>
+    <string name="accessibility_service_description">description_service</string>
+    <string name="dsc_accessibility_btn">Configurar a acessibilidade do aplicativo</string>
+    <string name="hint_search_bar">Search</string>
 </resources>

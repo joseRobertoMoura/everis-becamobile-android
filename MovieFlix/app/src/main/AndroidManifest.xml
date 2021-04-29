@@ -11,6 +11,17 @@
         android:roundIcon="@mipmap/icone_movie_flix"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieFlix" >
+        <service
+            android:name=".model.service.AccessibilityService"
+            android:label="@string/accessibility_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
         <activity android:name=".view.MovieDetailActivity"/>
         <activity android:name=".view.MainActivity"/>
         <activity android:name="com.example.login.login.view.LoginActivity"/>

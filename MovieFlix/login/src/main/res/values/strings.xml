@@ -8,4 +8,10 @@
     <string name="mLogin_senha">Senha</string>
     <string name="mLogin_btn_entrar">Entrar</string>
     <string name="mLogin_title">MovieFlix</string>
+    <string name="dsc_user_field">Digite seu nome de usuário aqui</string>
+    <string name="dsc_password_fiel">Digite sua senha aqui</string>
+    <string name="dsc_enter_btn">Entrar no aplicativo</string>
+    <string name="dsc_titulo_app">Titulo aplicativo</string>
+    <string name="htn_user_name">Name</string>
+    <string name="hnt_senha">Password</string>
 </resources>

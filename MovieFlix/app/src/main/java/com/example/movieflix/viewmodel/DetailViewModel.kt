@@ -4,71 +4,61 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.movieflix.model.api.MovieFlixApiTask
 import com.example.movieflix.model.helper.SharedPreferences
 import com.example.movieflix.model.Movie
 import com.example.movieflix.model.MovieDetail
+import com.example.movieflix.model.repository.MovieRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 
 class DetailViewModel : ViewModel() {
-    lateinit var sharedPreferences: SharedPreferences
+    private val movieFlixApiTask = MovieFlixApiTask()
+    private val movieFlixRepository = MovieRepository(movieFlixApiTask)
 
 
-    private var check = MutableLiveData<Boolean>()
-    val moviesList: LiveData<Boolean>
-        get() = check
+    private var detailObject = MutableLiveData<MovieDetail>()
+    val moviesDetail: LiveData<MovieDetail>
+        get() = detailObject
 
     fun init(movie: Movie?, context: Context) {
         val id: String? = movie?.id
         setObject(id, context)
     }
 
-
     private fun setObject(id: String?, context: Context) {
-        try {
-            Thread {
-                sharedPreferences = SharedPreferences(context)
-                val call = MovieFlixApiTask.retrofitApi()
-                    .getMovieDetail(id, "579dbbdd2de6dd3cc42c4d65dc3afdae")
-                call.enqueue(object : Callback<MovieDetail> {
-                    override fun onResponse(
-                        call: Call<MovieDetail>,
-                        response: Response<MovieDetail>
-                    ) {
-                        if (response.isSuccessful) {
-
-                            sharedPreferences.storeString(
-                                "original_name",
-                                response.body()?.original_name.toString()
-                            )
-                            sharedPreferences.storeString(
-                                "original_title",
-                                response.body()?.original_title.toString()
-                            )
-                            sharedPreferences.storeString(
-                                "poster_path",
-                                response.body()?.poster_path.toString()
-                            )
-                            sharedPreferences.storeString(
-                                "overview",
-                                response.body()?.overview.toString()
-                            )
-
-                            check.postValue(true)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<MovieDetail>, t: Throwable) {
-                        check.postValue(false)
-                    }
-                })
-            }.start()
-        } catch (e: Exception) {
-            check.postValue(false)
-            println(e.message)
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Default) {
+                movieFlixRepository.requestMovieDetails(
+                    id,
+                    ::onRequestSuccess,
+                    ::onRequestError
+                )
+            }
         }
+    }
+
+    private fun onRequestError(code: Int?, message: String?) {
+        detailObject.postValue(null)
+    }
+
+    private fun onRequestSuccess(movieDetail: MovieDetail) {
+
+        val detail = MovieDetail(
+            movieDetail.original_title.toString(),
+            movieDetail.poster_path.toString(),
+            movieDetail.overview.toString(),
+            movieDetail.original_name.toString()
+        )
+
+        detailObject.postValue(detail)
+
     }
 }

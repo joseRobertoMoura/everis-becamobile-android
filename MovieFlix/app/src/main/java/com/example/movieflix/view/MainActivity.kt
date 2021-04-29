@@ -3,7 +3,9 @@ package com.example.movieflix.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
@@ -18,8 +20,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListener {
 
-    private var listToSearch: MutableList<Movie> = arrayListOf()
-    private var listResultSearch: MutableList<Movie> = arrayListOf()
     private lateinit var mainViewModel: MainViewModel
     private var numPage = 1
     private lateinit var totalPages: String
@@ -30,21 +30,26 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         setContentView(R.layout.activity_main)
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar?.setCustomView(R.layout.abs_main_item)
+
         back_btn.setOnClickListener(this)
         next_btn.setOnClickListener(this)
         voltar_btn.setOnClickListener(this)
         search_btn.setOnClickListener(this)
-        send_search.setOnClickListener(this)
         btn_exit.setOnClickListener(this)
+        accessibility_btn.setOnClickListener(this)
 
-        if (Loged == -1) {
-            login()
-        }
     }
 
     private fun login() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent, LOGIN_CODE_SUCCESS)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (Loged == -1) {
+            login()
+        }
     }
 
     override fun onRestart() {
@@ -64,9 +69,10 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
         } else if (requestCode == LOGIN_CODE_ERROR) {
             login()
         }
+
     }
 
-    private fun mainViewObserver(numPage: String) {
+    fun mainViewObserver(numPage: String) {
         mainViewModel =
             ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
         mainViewModel.init(numPage)
@@ -76,12 +82,8 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
             if (list != null) {
                 loadingVisibility(false)
                 visibilityRecyclerView(true)
-                listToSearch.addAll(list)
-                if (listResultSearch.isNotEmpty()) {
-                    moviesList.adapter = MoviesAdapter(listResultSearch, this)
-                } else {
-                    moviesList.adapter = MoviesAdapter(list, this)
-                }
+                moviesList.adapter = MoviesAdapter(list, this)
+                initSearch(list)
             } else {
                 loadingVisibility(false)
                 Toast.makeText(
@@ -135,31 +137,24 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
 
             (id == R.id.search_btn) -> {
                 tv_title_abs_main.visibility = View.GONE
+                sv_search_bar.visibility = View.VISIBLE
+                voltar_btn.visibility = View.VISIBLE
                 search_btn.visibility = View.GONE
-                text_search.visibility = View.VISIBLE
-                send_search.visibility = View.VISIBLE
+                accessibility_btn.visibility = View.GONE
                 back_btn.visibility = View.GONE
                 next_btn.visibility = View.GONE
                 btn_exit.visibility = View.GONE
             }
 
-            (id == R.id.send_search) -> {
-                voltar_btn.visibility = View.VISIBLE
-                val title = text_search.text.toString()
-                listResultSearch = searchList(listToSearch, title)
-                mainViewObserver(numPage.toString())
-            }
 
             (id == R.id.voltar_btn) -> {
                 mainViewObserver(numPage.toString())
-                text_search.text.clear()
-                listResultSearch.clear()
 
                 tv_title_abs_main.visibility = View.VISIBLE
                 search_btn.visibility = View.VISIBLE
-                text_search.visibility = View.GONE
-                send_search.visibility = View.GONE
+                sv_search_bar.visibility = View.GONE
                 voltar_btn.visibility = View.GONE
+                accessibility_btn.visibility = View.VISIBLE
                 back_btn.visibility = View.VISIBLE
                 next_btn.visibility = View.VISIBLE
                 btn_exit.visibility = View.VISIBLE
@@ -170,20 +165,48 @@ class MainActivity() : AppCompatActivity(), ClickItemListener, View.OnClickListe
                 login()
                 finish()
             }
+
+            (id == R.id.accessibility_btn) -> {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                startActivity(intent)
+            }
         }
 
     }
 
-    private fun searchList(list: MutableList<Movie>, title: String): MutableList<Movie> {
+    private fun searchList(list: List<Movie>, title: String) {
         val listResult: MutableList<Movie> = arrayListOf()
         for (element in list) {
-            if (element.original_title?.contains(title) == true) {
+            if (element.original_title?.contains(title, ignoreCase = true) == true) {
                 listResult.addAll(listOf(element))
                 break
             }
         }
 
-        return listResult
+        moviesList.adapter = MoviesAdapter(listResult, this)
+    }
+
+    private fun initSearch(list: List<Movie>) {
+
+        sv_search_bar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if(query.isEmpty()){
+                    moviesList.adapter = MoviesAdapter(list, this@MainActivity)
+                }else{
+                    searchList(list, query)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                if(newText.isEmpty()){
+                    moviesList.adapter = MoviesAdapter(list, this@MainActivity)
+                }else{
+                    searchList(list, newText)
+                }
+                return false
+            }
+        })
     }
 
     private companion object {

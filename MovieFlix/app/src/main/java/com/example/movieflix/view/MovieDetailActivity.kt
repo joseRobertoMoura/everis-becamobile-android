@@ -38,10 +38,6 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         sharedPreferences = SharedPreferences(this)
 
-        detailViewModel =
-            ViewModelProvider.NewInstanceFactory().create(DetailViewModel::class.java)
-        detailViewModel.init(movie, this)
-
         bindViews()
 
         abs_detail_back_btn.setOnClickListener(this)
@@ -52,31 +48,30 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun bindViews() {
+        detailViewModel =
+            ViewModelProvider.NewInstanceFactory().create(DetailViewModel::class.java)
+        detailViewModel.init(movie, this)
         visibilityProgressBar(true)
         visibilityLayoutDescricao(false)
-        detailViewModel.moviesList.observe(this,{
-            if (it){
-                val posterPath = sharedPreferences.getString("poster_path")
-                val originalTitle = sharedPreferences.getString("original_title")
-                val originalName = sharedPreferences.getString("original_name")
-                val overview = sharedPreferences.getString("overview")
+        detailViewModel.moviesDetail.observe(this,{
+            if (it != null){
                 visibilityProgressBar(false)
                 visibilityLayoutDescricao(true)
                 findViewById<AppCompatImageView>(R.id.movieImage_detail).load(
                     "https://image.tmdb.org/t/p/w500"
-                            + posterPath
+                            + it.poster_path
                 ) {
                     placeholder(R.drawable.ic_baseline_image_24)
                     fallback(R.drawable.ic_baseline_image_24)
                 }
-                if (originalTitle !=  null) {
+                if (it.original_title !=  null) {
                     findViewById<TextView>(R.id.tv_title).text =
-                        originalTitle
-                } else if (originalName != null) {
+                        it.original_title
+                } else if (it.original_name != null) {
                     findViewById<TextView>(R.id.tv_title).text =
-                        originalName
+                        it.original_name
                 }
-                findViewById<TextView>(R.id.tv_overview).text = overview
+                findViewById<TextView>(R.id.tv_overview).text = it.overview
             }else {
                 Toast.makeText(
                     this@MovieDetailActivity,
